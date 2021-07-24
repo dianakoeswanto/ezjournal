@@ -7,7 +7,8 @@
       "node": "16.4.0"
     },
     "scripts": {
-      "start": "tsc -w\" \"nodemon server/dist/js/app.js\"",
+      "start": "node server/dist/js/app.js",
+      "postinstall": "cd server && tsc",
       "develop": "concurrently \"cd server && npm run start\" \"cd client && npm start\"",
       "install": "cd server && npm i && cd ../client && npm i",
       "seed": "cd server && npm run seed",
