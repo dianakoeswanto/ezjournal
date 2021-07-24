@@ -9,9 +9,9 @@ const app: Express = express()
 const PORT: string | number = process.env.PORT || 3001
 app.use(cors())
 app.use(routes);
-app.use(express.static(path.join(__dirname, '../dist/js')))
+app.use(express.static(path.join(__dirname, '../js')))
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/js'))
+  res.sendFile(path.join(__dirname, '../js'))
 })
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/ezjournal", {
