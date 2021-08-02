@@ -1,6 +1,7 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
 export interface IStudent extends Document {
+  _id: string
   firstname: string;
   lastname: string;
   parent: Types.ObjectId;

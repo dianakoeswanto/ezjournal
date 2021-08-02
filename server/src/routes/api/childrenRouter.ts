@@ -9,7 +9,16 @@ childrenRouter.get('/parent=:parent_id', async(request, response) => {
     console.log("Getting children for user id ", userId);
 
     const children: IStudent[] = await Student.find({parent: userId});
-    response.status(200).json({children});
+    console.log(children);
+    const result = children.map((child) => {
+        return {
+            id: child._id,
+            displayName: `${child.firstname} ${child.lastname}`,
+            parent: child.parent,
+            classes: child.classes,
+        }
+    })
+    response.status(200).json({result});
 });
 
 childrenRouter.post('/', async(request, response) => {
