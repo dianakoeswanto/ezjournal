@@ -1,6 +1,7 @@
 import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
 import React from "react";
+import { Link } from "react-router-dom";
 // import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
@@ -21,8 +22,9 @@ const useStyles = makeStyles({
 })
 
 export interface ListViewData {
-    _id: string,
-    displayName: string
+    id: string,
+    displayName: string,
+    linkURL: string
 }
 interface ListViewProps {
     title: string,
@@ -42,14 +44,17 @@ const ListView = ({ title, avatarIcon, displayData } : ListViewProps): React.Rea
             <List>
                 {displayData.map((data) => {
                     return(
-                    <ListItem key={data._id} button>
-                        <ListItemAvatar>
-                            <Avatar src="/broken-image.jpg">
-                                {avatarIcon}
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText id="someId" primary={data.displayName} />
-                    </ListItem>
+                    <Link to={data.linkURL}>
+                        <ListItem key={data.id} button>
+                            <ListItemAvatar>
+                                <Avatar src="/broken-image.jpg">
+                                    {avatarIcon}
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText id={data.id} primary={data.displayName} />
+                        </ListItem>
+                    </Link>
+                    
                     )
                     
                 })}
