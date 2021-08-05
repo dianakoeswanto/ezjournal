@@ -1,4 +1,3 @@
-import { Container } from '@material-ui/core';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ListView, { ListViewData } from '../component/ListView';
@@ -21,20 +20,20 @@ const getChildrenDisplayData = async (): Promise<ListViewData[]> => {
 }
 
 const Home = (): React.ReactElement => {
-    const [title, setTitle] = useState<string>("");
     const [data, setData] = useState<ListViewData[]>([]);
 
     useEffect(() => {
         (async () => {
-        setTitle("My Children");
-        setData(await getChildrenDisplayData());
+            setData(await getChildrenDisplayData());
         })();
     }, []);
-    
+
+   
     return (
-        <Container fixed>
-            <ListView title={title} displayData={data}></ListView>
-        </Container>
+        <>
+            <ListView title="My Children" displayData={data} addButton={true}></ListView>
+            
+        </>
     );
 }
 

@@ -4,3 +4,11 @@ export interface IChild {
     parent: string,
     classes: Array<Object>
 }
+
+export interface IClass {
+    id: string;
+    className: string;
+    classTime: Date;
+    student: Object;
+    teacher: Object;
+}

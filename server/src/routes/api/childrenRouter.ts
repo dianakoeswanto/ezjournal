@@ -21,6 +21,23 @@ childrenRouter.get('/parent=:parent_id', async(request, response) => {
     response.status(200).json({result});
 });
 
+childrenRouter.get('/:id', async(request, response) => {
+    const id: string = request.params.id;
+    console.log("Getting children with id", id);
+
+    const child: IStudent | null = await Student.findById(id).populate("classes");
+    console.log(child);
+    // const result = children.map((child) => {
+    //     return {
+    //         id: child._id,
+    //         displayName: `${child.firstname} ${child.lastname}`,
+    //         parent: child.parent,
+    //         classes: child.classes,
+    //     }
+    // })
+    response.status(200).json(child);
+});
+
 childrenRouter.post('/', async(request, response) => {
     const { firstname, lastname, parentId } = request.body;
     //todo check if all body are passed in

@@ -1,12 +1,15 @@
 import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
-import React from "react";
+import React, { ReactElement, useState } from "react";
 import { Link } from "react-router-dom";
+import AddChild from "../pages/AddChild";
+import SimpleModal from "./SimpleModal";
 // import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
     paper: {
-        padding: '20px 20px'
+        padding: '20px 20px',
+        boxShadow: 'none'
     },
     header: {
         paddingRight: '5px',
@@ -29,36 +32,47 @@ export interface ListViewData {
 interface ListViewProps {
     title: string,
     avatarIcon?: JSX.Element,
-    displayData: ListViewData[]
+    displayData: ListViewData[],
+    addButton?: boolean
 }
 
-const ListView = ({ title, avatarIcon, displayData } : ListViewProps): React.ReactElement => {
+const ListView = (props : ListViewProps): ReactElement => {
     const classes = useStyles();
+    const [openModal, setOpenModal] = useState<boolean>(false);
     
+    // const addModalComponent = props.addModalComponent;
+
     return <Paper className={classes.paper}>
         <Box>
-            <Typography className={classes.header} variant="h5">{title}</Typography>
-            <IconButton className={classes.headerIcon} color="primary"><AddCircle /></IconButton>
+            <Typography className={classes.header} variant="h5">{props.title}</Typography>
+            { 
+                props.addButton && 
+                        <IconButton className={classes.headerIcon} color="primary" onClick={() => {setOpenModal(true)}}>
+                            <AddCircle />
+                        </IconButton>
+            }
+            {
+                props.addButton && 
+                    <AddChild open={openModal} setOpen={setOpenModal} />
+            }
+            
         </Box>
         <Box mt={3}>
             <List>
-                {displayData.map((data) => {
+                {props.displayData.map((data) => {
                     return(
                     <Link to={data.linkURL}>
                         <ListItem key={data.id} button>
                             <ListItemAvatar>
                                 <Avatar src="/broken-image.jpg">
-                                    {avatarIcon}
+                                    {props.avatarIcon}
                                 </Avatar>
                             </ListItemAvatar>
                             <ListItemText id={data.id} primary={data.displayName} />
                         </ListItem>
                     </Link>
-                    
                     )
-                    
                 })}
-                
             </List>
         </Box>
     </Paper>
