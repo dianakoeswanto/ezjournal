@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Classes from './pages/Classes';
 import TopBar from './component/TopBar';
+import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,13 +19,15 @@ const App = (): React.ReactElement => {
   const classes = useStyles();
   return (
     <Router>
-        <TopBar />
-        <Container className={classes.root}>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/children/:id/classes" component={Classes} />
-          </Switch>
-        </Container>
+        <Auth0ProviderWithHistory>
+            <TopBar />
+            <Container className={classes.root}>
+              <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/children/:id/classes" component={Classes} />
+              </Switch>
+            </Container>
+        </Auth0ProviderWithHistory>
     </Router>
       
   );
