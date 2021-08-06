@@ -12,3 +12,13 @@ export interface IClass {
     student: Object;
     teacher: Object;
 }
+
+export interface IUser {
+    id: string,
+    email: string,
+    name: string,
+}
+
+export interface StoreState {
+    children: IChild[],
+}

@@ -1,9 +1,23 @@
-import { TextField } from "@material-ui/core";
-import axios from "axios";
+import { TextField } from '@material-ui/core';
+import axios, {AxiosResponse} from "axios";
 import React, { useState } from "react";
-import SimpleModal from "../component/SimpleModal";
+import SimpleModal from '../component/SimpleModal';
+import { IChild, IUser } from '../types/types';
+import {useCurrentUser} from "../hooks/use-current-user";
+import { useChildren } from '../store/store';
 
-const PARENT_ID = '60fcf0e89ceb9c9790b75e61';
+type AddChildResponse = {
+    newChild: {
+        _id: string,
+        firstname: string,
+        lastname: string,
+        classes: object[],
+        parent: {
+            _id: string,
+        },
+    }
+};
+
 
 const AddChild = () : React.ReactElement => {
     const [fields, setFields] = useState({
@@ -15,6 +29,8 @@ const AddChild = () : React.ReactElement => {
         lastname: null
     });
     const [open, setOpen] = useState(false);
+    const currentUser: IUser = useCurrentUser();
+    const [_, { add }] = useChildren();
 
     const resetErrors = () => {
         setErrors({
@@ -67,8 +83,18 @@ const AddChild = () : React.ReactElement => {
 
     const handleSubmit = () => {
         if(isFormValid()) {
-            axios.post('/api/children/', {...fields, parentId: PARENT_ID})
-                .then(() => setOpen(false));
+            axios.post<any, AxiosResponse<AddChildResponse>>('/api/children/', {...fields, parentId: currentUser.id})
+                .then((response) => {
+                    const { data: { newChild }} = response;
+                    const child: IChild = {
+                        id: newChild._id,
+                        displayName: `${newChild.firstname} ${newChild.lastname}`,
+                        parent: newChild.parent._id,
+                        classes: newChild.classes,
+                    }
+                    add(child);
+                    setOpen(false);
+                });
         }
     }
 

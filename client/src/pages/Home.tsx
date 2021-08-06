@@ -1,38 +1,34 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ListView, { ListViewData } from '../component/ListView';
-import { IChild } from '../types/types';
+import { IChild, IUser } from '../types/types';
 import AddChild from './AddChild';
+import { useChildren } from '../store/store';
+import { useCurrentUser } from '../hooks/use-current-user';
 
 
-const getChildren = async (): Promise<IChild[]> => {
-    return (await axios.get('/api/children/parent=60fcf0e89ceb9c9790b75e61')).data.result as IChild[];
+const getChildren = async (user: IUser): Promise<IChild[]> => {
+    return (await axios.get(`/api/children/parent=${user.id}`)).data.result as IChild[];
 }
 
-const getChildrenDisplayData = async (): Promise<ListViewData[]> => {
-    const children = await getChildren();
-    return children.map((child: IChild) => {
-        return {
-            id: child.id,
-            displayName: child.displayName,
-            linkURL: `/children/${child.id}/classes`
-        } as ListViewData
-    })
-}
+const transformChildren = (children: IChild[]): ListViewData[] => children.map((child) => ({
+    id: child.id,
+    displayName: child.displayName,
+    linkURL: `/children/${child.id}/classes`
+}));
 
 const Home = (): React.ReactElement => {
-    const [data, setData] = useState<ListViewData[]>([]);
+    const user = useCurrentUser();
+    const [{ children }, { set }] = useChildren();
 
     useEffect(() => {
-        (async () => {
-            setData(await getChildrenDisplayData());
-        })();
+        getChildren(user).then(children => set(children));
     }, []);
    
     return (
         <ListView 
             title="My Children" 
-            displayData={data} 
+            displayData={transformChildren(children)}
             addButton={<AddChild />}
         />
     );
