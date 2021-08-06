@@ -22,26 +22,18 @@ const getChildrenDisplayData = async (): Promise<ListViewData[]> => {
 
 const Home = (): React.ReactElement => {
     const [data, setData] = useState<ListViewData[]>([]);
-    const [openModal, setOpenModal] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {
             setData(await getChildrenDisplayData());
         })();
     }, []);
-
-    const addChildModal = (
-        <AddChild open={openModal} setOpen={setOpenModal} />
-    )
    
     return (
         <ListView 
             title="My Children" 
             displayData={data} 
-            addButton={{
-                childComponent: addChildModal,
-                setOpen: setOpenModal
-            }} 
+            addButton={<AddChild />}
         />
     );
 }

@@ -4,20 +4,17 @@ import React, { useState } from "react";
 import SimpleModal from "../component/SimpleModal";
 
 const PARENT_ID = '60fcf0e89ceb9c9790b75e61';
-interface AddChildProps {
-    open: boolean,
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
-}
 
-const AddChild = (props: AddChildProps) : React.ReactElement => {
+const AddChild = () : React.ReactElement => {
     const [fields, setFields] = useState({
         firstname: '',
         lastname: ''
-    })
+    });
     const [errors, setErrors] = useState({
         firstname: null,
         lastname: null
-    })
+    });
+    const [open, setOpen] = useState(false);
 
     const resetErrors = () => {
         setErrors({
@@ -68,26 +65,21 @@ const AddChild = (props: AddChildProps) : React.ReactElement => {
         return isValid;
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         if(isFormValid()) {
-            const result = await axios.post('/api/children/', {...fields, parentId: PARENT_ID});
-            handleClose()
+            axios.post('/api/children/', {...fields, parentId: PARENT_ID})
+                .then(() => setOpen(false));
         }
     }
 
-    const handleClose = () => {
-        resetErrors();
-        console.log('handle close');
-        props.setOpen(false);
-    }
-
     return (
-        <SimpleModal 
-            title="Add Child" 
+        <SimpleModal
+            onOpen={() => setOpen(true)}
+            onClose={() => setOpen(false)}
+            title="Add Child"
             content={addChild} 
-            open={props.open} 
-            onSubmit={handleSubmit}
-            onClose={handleClose} />
+            open={open}
+            onSubmit={handleSubmit} />
       );
 }
 

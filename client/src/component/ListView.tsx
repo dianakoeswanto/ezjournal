@@ -30,30 +30,15 @@ interface ListViewProps {
     title: string,
     avatarIcon?: JSX.Element,
     displayData: ListViewData[],
-    addButton?: {
-        childComponent: ReactElement,
-        setOpen: Dispatch<React.SetStateAction<boolean>>
-    }
+    addButton?: ReactElement,
 }
 
 const ListView = (props : ListViewProps): ReactElement => {
     const classes = useStyles();
-
-    const displayAddButton = () => {
-        if(!props.addButton) { return (null); }
-        
-        return (
-            <IconButton className={classes.headerIcon} color="primary" onClick={() => {props.addButton!.setOpen(true)}}>
-                <AddCircle />
-                {props.addButton!.childComponent}
-            </IconButton>
-        )
-    }
-
     return <Paper className={classes.paper}>
         <Box>
             <Typography className={classes.header} variant="h5">{props.title}</Typography>
-            { displayAddButton() }
+            { props.addButton }
         </Box>
         <Box mt={3}>
             <List>
