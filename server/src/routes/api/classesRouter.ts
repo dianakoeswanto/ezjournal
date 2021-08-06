@@ -21,15 +21,7 @@ classesRouter.get('/teacher=:teacher_id', async(request, response) => {
     response.status(200).json({classes});
 });
 
-classesRouter.post('/', async(request, response) => {
-    //get user id from param
-    //Check if teacher / parent
-    //if parent, get classname, class time, teacher name, teacher email
-        //save class
-    
-    //if teacher, get classname, class time, student name, parent name, parent email
-        //save class
-})
+
 
 // classesRouter.post('/', async(request, response) => {
 //     const { className, classTime, studentId, teacherId } = request.body;

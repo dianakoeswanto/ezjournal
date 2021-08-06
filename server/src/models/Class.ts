@@ -12,8 +12,12 @@ const classSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  classDay: {
+    type: String,
+    required: true,
+},
   classTime: {
-      type: Date,
+      type: String,
       required: true,
   },
   student: {

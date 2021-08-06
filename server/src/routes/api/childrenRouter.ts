@@ -1,4 +1,5 @@
-import express, { Router } from "express";
+import { Router } from "express";
+import Class, { IClass } from "../../models/Class";
 import Student, { IStudent } from "../../models/Student";
 import User, { IUser } from "../../models/User";
 
@@ -26,15 +27,6 @@ childrenRouter.get('/:id', async(request, response) => {
     console.log("Getting children with id", id);
 
     const child: IStudent | null = await Student.findById(id).populate("classes");
-    console.log(child);
-    // const result = children.map((child) => {
-    //     return {
-    //         id: child._id,
-    //         displayName: `${child.firstname} ${child.lastname}`,
-    //         parent: child.parent,
-    //         classes: child.classes,
-    //     }
-    // })
     response.status(200).json(child);
 });
 
@@ -48,6 +40,26 @@ childrenRouter.post('/', async(request, response) => {
     const allChildren: IStudent[] = await Student.find().populate("parent");
     
     response.status(200).json({newChild, allChildren});
+})
+
+childrenRouter.post('/classes', async(request, response) => {
+    console.log("in post /classes");
+    const {studentId, className, classTime, teacherName, teacherEmail} = request.body;
+    console.log(studentId, className, classTime, teacherName, teacherEmail)
+
+    const child: IStudent | null = await Student.findById(studentId);
+    console.log(child);
+    if(!child) {
+        console.log("student not found");
+        response.status(400).send(`Unable to find student with id ${studentId}`)
+    }
+
+    console.log("child found");
+    const teacher: IUser = new User({name: teacherName, email: teacherEmail});
+    const klass: IClass = new Class({className, classTime, teacher});
+    const newClass: IClass = await klass.save();
+
+    response.status(200).json({newClass});
 })
 
 

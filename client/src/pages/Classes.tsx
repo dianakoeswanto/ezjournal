@@ -3,6 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ListView, { ListViewData } from '../component/ListView';
 import { IClass } from '../types/types';
+import AddClass from './AddClass';
 
 const getClasses = async (studentId: string): Promise<IClass[]> => {
     return (await axios.get(`/api/classes/student=${studentId}`)).data.result as IClass[];
@@ -37,7 +38,7 @@ const Classes = () : ReactElement => {
     }, []);
 
     return (
-        <ListView title={title} displayData={data}></ListView>
+        <ListView title={title} displayData={data} addButton={<AddClass />}></ListView>
     );
 }
 
