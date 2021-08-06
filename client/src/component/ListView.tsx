@@ -1,10 +1,7 @@
 import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import { AddCircle } from "@material-ui/icons";
-import React, { ReactElement, useState } from "react";
+import { Dispatch, ReactElement } from "react";
 import { Link } from "react-router-dom";
-import AddChild from "../pages/AddChild";
-import SimpleModal from "./SimpleModal";
-// import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({
     paper: {
@@ -33,29 +30,30 @@ interface ListViewProps {
     title: string,
     avatarIcon?: JSX.Element,
     displayData: ListViewData[],
-    addButton?: boolean
+    addButton?: {
+        childComponent: ReactElement,
+        setOpen: Dispatch<React.SetStateAction<boolean>>
+    }
 }
 
 const ListView = (props : ListViewProps): ReactElement => {
     const classes = useStyles();
-    const [openModal, setOpenModal] = useState<boolean>(false);
-    
-    // const addModalComponent = props.addModalComponent;
+
+    const displayAddButton = () => {
+        if(!props.addButton) { return (null); }
+        
+        return (
+            <IconButton className={classes.headerIcon} color="primary" onClick={() => {props.addButton!.setOpen(true)}}>
+                <AddCircle />
+                {props.addButton!.childComponent}
+            </IconButton>
+        )
+    }
 
     return <Paper className={classes.paper}>
         <Box>
             <Typography className={classes.header} variant="h5">{props.title}</Typography>
-            { 
-                props.addButton && 
-                        <IconButton className={classes.headerIcon} color="primary" onClick={() => {setOpenModal(true)}}>
-                            <AddCircle />
-                        </IconButton>
-            }
-            {
-                props.addButton && 
-                    <AddChild open={openModal} setOpen={setOpenModal} />
-            }
-            
+            { displayAddButton() }
         </Box>
         <Box mt={3}>
             <List>

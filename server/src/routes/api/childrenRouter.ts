@@ -46,6 +46,7 @@ childrenRouter.post('/', async(request, response) => {
     const child: IStudent = new Student({firstname, lastname, parent: user});
     const newChild: IStudent = await child.save();
     const allChildren: IStudent[] = await Student.find().populate("parent");
+    
     response.status(200).json({newChild, allChildren});
 })
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ListView, { ListViewData } from '../component/ListView';
 import { IChild } from '../types/types';
+import AddChild from './AddChild';
 
 
 const getChildren = async (): Promise<IChild[]> => {
@@ -21,6 +22,7 @@ const getChildrenDisplayData = async (): Promise<ListViewData[]> => {
 
 const Home = (): React.ReactElement => {
     const [data, setData] = useState<ListViewData[]>([]);
+    const [openModal, setOpenModal] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {
@@ -28,12 +30,19 @@ const Home = (): React.ReactElement => {
         })();
     }, []);
 
+    const addChildModal = (
+        <AddChild open={openModal} setOpen={setOpenModal} />
+    )
    
     return (
-        <>
-            <ListView title="My Children" displayData={data} addButton={true}></ListView>
-            
-        </>
+        <ListView 
+            title="My Children" 
+            displayData={data} 
+            addButton={{
+                childComponent: addChildModal,
+                setOpen: setOpenModal
+            }} 
+        />
     );
 }
 

@@ -1,7 +1,9 @@
 import { TextField } from "@material-ui/core";
+import axios from "axios";
 import React, { useState } from "react";
 import SimpleModal from "../component/SimpleModal";
 
+const PARENT_ID = '60fcf0e89ceb9c9790b75e61';
 interface AddChildProps {
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
@@ -22,38 +24,6 @@ const AddChild = (props: AddChildProps) : React.ReactElement => {
             firstname: null,
             lastname: null
         })
-    }
-
-    const isFormValid = () : boolean => {
-        resetErrors();
-        let validationErrors = {}
-
-        if(!fields.firstname) {
-            validationErrors = {...validationErrors, firstname: 'Required'};
-        }
-        
-        if(!fields.lastname) {
-            validationErrors = {...validationErrors, lastname: 'Required'};
-        }
-
-        const isValid = Object.keys(validationErrors).length === 0
-        if(!isValid) {
-            setErrors((prevstate) => ({...prevstate, ...validationErrors}));
-        }
-        return isValid;
-    }
-
-    
-    const handleSubmit = () => {
-        if(isFormValid()) {
-            console.log('submitting');
-            handleClose()
-        }
-    }
-
-    const handleClose = () => {
-        resetErrors();
-        props.setOpen(false);
     }
 
     const addChild = (
@@ -81,12 +51,41 @@ const AddChild = (props: AddChildProps) : React.ReactElement => {
         </form>
     )
 
+    const isFormValid = () : boolean => {
+        resetErrors();
+        let validationErrors = {}
+
+        Object.entries(fields).map(([key, value]) => {
+            if(!value) {
+                validationErrors = {...validationErrors, [key] : "Required"};
+            }
+        });
+
+        const isValid = Object.keys(validationErrors).length === 0
+        if(!isValid) {
+            setErrors((prevstate) => ({...prevstate, ...validationErrors}));
+        }
+        return isValid;
+    }
+
+    const handleSubmit = async () => {
+        if(isFormValid()) {
+            const result = await axios.post('/api/children/', {...fields, parentId: PARENT_ID});
+            handleClose()
+        }
+    }
+
+    const handleClose = () => {
+        resetErrors();
+        console.log('handle close');
+        props.setOpen(false);
+    }
+
     return (
         <SimpleModal 
             title="Add Child" 
             content={addChild} 
             open={props.open} 
-            setOpen={props.setOpen}
             onSubmit={handleSubmit}
             onClose={handleClose} />
       );

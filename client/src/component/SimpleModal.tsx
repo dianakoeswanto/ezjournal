@@ -16,7 +16,6 @@ interface SimpleModalProps {
     title: string,
     content: React.ReactElement,
     open: boolean
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
     onSubmit: () => void
     onClose: () => void
 }
