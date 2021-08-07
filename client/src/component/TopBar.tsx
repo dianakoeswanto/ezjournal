@@ -2,6 +2,7 @@ import { AppBar, createStyles, IconButton, makeStyles, Menu, MenuItem, Theme, To
 import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const TopBar = (): React.ReactElement => {
   const auth = true;
   const classes = useStyles();
+  const { logout } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -65,7 +67,7 @@ const TopBar = (): React.ReactElement => {
                 open={open}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
+                <MenuItem onClick={() => logout({ returnTo: window.location.origin })}>Logout</MenuItem>
               </Menu>
             </div>)}
         </Toolbar>
