@@ -1,4 +1,12 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Types } from 'mongoose';
+
+export interface ILesson {
+  time: Date,
+  positiveComments: String,
+  additionalComments: String
+  class: Types.ObjectId,
+  improvements: [Types.ObjectId]
+}
 
 const lessonSchema = new Schema({
   time: {
@@ -14,11 +22,17 @@ const lessonSchema = new Schema({
       required: true,
   },
   class: {
-    type: Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: "Class"
-  }
+  },
+  improvements: [
+    {
+      type: Types.ObjectId,
+      ref: "Task"
+    }
+  ]
 });
 
-const Lesson = model('Lesson', lessonSchema);
+const Lesson = model<ILesson>('Lesson', lessonSchema);
 
 export default Lesson;

@@ -50,7 +50,7 @@ const Home = (): React.ReactElement => {
             {
                 children.length === 0 && classes.length !== 0 ? (
                     <ListView
-                        title="My Class"
+                        title="My Classes"
                         displayData={transformClasses(classes)}
                     />
                 ) : (
