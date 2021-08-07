@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const TopBar = (): React.ReactElement => {
   const auth = true;
   const classes = useStyles();
-  const { logout } = useAuth0();
+  const { logout, user } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -48,7 +48,7 @@ const TopBar = (): React.ReactElement => {
           <Typography variant="h6" className={classes.title}>
             EZJournal
           </Typography>
-          {auth && (<div>
+          {user && (<div>
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -56,7 +56,7 @@ const TopBar = (): React.ReactElement => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <Avatar className={classes.orange}>X</Avatar>
+                <Avatar className={classes.orange}>{(user['given_name'] || '')[0]}</Avatar>
               </IconButton>
               <Menu
                 id="menu-appbar"
