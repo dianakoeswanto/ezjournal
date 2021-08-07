@@ -25,6 +25,7 @@
     "@types/mongoose": "^5.11.97",
     "node": "^16.4.0",
     "@types/node": "^16.4.1",
+    "axios": "^0.21.1",
     "typescript": "^4.3.5"
   },
   "devDependencies": {
