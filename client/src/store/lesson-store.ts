@@ -10,7 +10,7 @@ const initialState: LessonStore = {
 };
 
 const actions = {
-    set: (lessons: ILesson[]): Action<LessonStore> =>
+    setLessons: (lessons: ILesson[]): Action<LessonStore> =>
         ({ setState }) =>
             setState({ lessons }),
     add: (lesson: ILesson): Action<LessonStore> =>

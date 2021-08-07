@@ -3,6 +3,7 @@ import Class,{ IClass } from "../../models/Class";
 import Lesson, { ILesson } from "../../models/Lesson";
 import Student, { IStudent } from "../../models/Student";
 import User, { IUser } from "../../models/User";
+import { getCurrentUser } from '../util';
 
 const classesRouter: Router = Router();
 
@@ -26,13 +27,14 @@ classesRouter.get('/teacher=:teacher_id', async(request, response) => {
 });
 
 classesRouter.get('/:id/lessons', async(request, response) => {
-    console.log("here")
     const classId: string = request.params.id;
 
+    const auth0User = await getCurrentUser(request);
+    const user: IUser | null = await User.findOne({ email: auth0User.email });
     const klass: IClass | null = await Class.findById(classId).populate("teacher").populate("student");
     const lessons: ILesson[] | [] = await Lesson.find({class: klass?._id});
 
-    response.status(200).json({klass, lessons});
+    response.status(200).json({user, klass, lessons});
 });
 
 // classesRouter.post('/', async(request, response) => {
