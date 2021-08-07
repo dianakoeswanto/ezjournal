@@ -1,8 +1,14 @@
 import { FormControl, makeStyles, MenuItem, TextField } from "@material-ui/core";
 import axios from "axios";
-import { ReactElement, useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useParams } from "react-router-dom";
 import SimpleModal from "../component/SimpleModal";
+import { useChildClasses } from "../store/child-class-store";
+import { IClass } from "../types/types";
+
+interface AddClassProps {
+    studentId: string
+}
 
 const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -16,8 +22,9 @@ const useStyles = makeStyles({
     }
 });
 
-const AddClass = (): ReactElement => {
+const AddClass = (props: AddClassProps): ReactElement => {
     const classes = useStyles();
+    const [_, { add }] = useChildClasses();
     const [open, setOpen] = useState(false);
     const [fields, setFields] = useState({
         className: '',
@@ -124,18 +131,29 @@ const AddClass = (): ReactElement => {
     );
 
     const handleSubmit = () => {
-        // if(isFormValid()) {
-        //     console.log("Form valid, submitting");
-        //     axios.post('/api/children/classes', {...fields, studentId: id})
-        //         .then(() => setOpen(false));
-        // }
+        if(isFormValid()) {
+            axios.post('/api/children/classes', {...fields, studentId: props.studentId})
+                .then((response) => {
+                    const { data: { newClass }} = response;
+                    const klass: IClass = {
+                        _id: newClass._id,
+                        className: newClass.className,
+                        classDay: newClass.classDay,
+                        classTime: newClass.classTime,
+                        student: newClass.student,
+                        teacher: newClass.teacher
+                    }
+                    add(klass);
+                    setOpen(false);
+                });
+        }
     }
 
     return (
         <SimpleModal
             onOpen={() => setOpen(true)}
             onClose={() => setOpen(false)}
-            title="Add Child"
+            title="Add Class"
             content={addClassForm} 
             open={open}
             onSubmit={handleSubmit} />

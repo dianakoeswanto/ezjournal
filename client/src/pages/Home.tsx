@@ -13,12 +13,12 @@ const getChildren = async (user: IUser, token: string): Promise<IChild[]> => {
         headers: {
             Authorization: `Bearer ${token}`,
         },
-    })).data.result as IChild[];
+    })).data.children as IChild[];
 }
 
 const transformChildren = (children: IChild[]): ListViewData[] => children.map((child) => ({
     id: child.id,
-    displayName: child.displayName,
+    displayName: `${child.firstname} ${child.lastname}`,
     linkURL: `/children/${child.id}/classes`
 }));
 

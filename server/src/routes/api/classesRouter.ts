@@ -7,15 +7,18 @@ const classesRouter: Router = Router();
 
 classesRouter.get('/student=:student_id', async(request, response) => {
     const studentId: string = request.params.student_id;
-    console.log("Getting classes for user id ", studentId);
 
-    const student: IStudent | null = await Student.findById(studentId).populate("classes");
-    response.status(200).json({classes: student?.classes});
+    const child: IStudent | null = await Student.findById(studentId);
+    if(!child) {
+        response.status(400).send(`Unable to find student with id ${studentId}`);
+    }
+    
+    const classes: IClass[] = await Class.find({student: studentId}).populate("teacher");
+    response.status(200).json({child, classes});
 });
 
 classesRouter.get('/teacher=:teacher_id', async(request, response) => {
     const teacherId: string = request.params.teacher_id;
-    console.log("Getting classes for user id ", teacherId);
 
     const classes: IClass[] = await Class.find({teacher: teacherId});
     response.status(200).json({classes});

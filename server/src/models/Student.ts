@@ -1,4 +1,5 @@
 import { Schema, model, Document, Types } from 'mongoose';
+import Class from './Class';
 
 export interface IStudent extends Document {
   _id: string

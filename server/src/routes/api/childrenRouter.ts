@@ -11,21 +11,19 @@ childrenRouter.get('/parent=:parent_id', async(request, response) => {
     console.log("Getting children for user ", JSON.stringify(request.user));
 
     const children: IStudent[] = await Student.find({parent: userId});
-    console.log(children);
     const result = children.map((child) => {
         return {
             id: child._id,
             displayName: `${child.firstname} ${child.lastname}`,
-            parent: child.parent,
-            classes: child.classes,
+            firstname: child.firstname,
+            lastname: child.lastname
         }
     })
-    response.status(200).json({result});
+    response.status(200).json({children: result});
 });
 
 childrenRouter.get('/:id', async(request, response) => {
     const id: string = request.params.id;
-    console.log("Getting children with id", id);
 
     const child: IStudent | null = await Student.findById(id).populate("classes");
     response.status(200).json(child);
@@ -44,21 +42,20 @@ childrenRouter.post('/', async(request, response) => {
 })
 
 childrenRouter.post('/classes', async(request, response) => {
-    console.log("in post /classes");
-    const {studentId, className, classTime, teacherName, teacherEmail} = request.body;
-    console.log(studentId, className, classTime, teacherName, teacherEmail)
-
+    const {studentId, className, classDay, classTime, teacherName, teacherEmail} = request.body;
     const child: IStudent | null = await Student.findById(studentId);
-    console.log(child);
     if(!child) {
-        console.log("student not found");
         response.status(400).send(`Unable to find student with id ${studentId}`)
     }
 
-    console.log("child found");
     const teacher: IUser = new User({name: teacherName, email: teacherEmail});
-    const klass: IClass = new Class({className, classTime, teacher});
-    const newClass: IClass = await klass.save();
+    await teacher.save();
+
+    const newClass: IClass = new Class({className, classDay, classTime, teacher, student: child});
+    await newClass.save();
+
+    child?.classes.push(newClass._id);
+    await child?.save();
 
     response.status(200).json({newClass});
 })
