@@ -18,6 +18,9 @@ const useStyles = makeStyles({
     headerIcon: {
         width: 'fit-content',
         padding: '5px'
+    },
+    emptyMessage: {
+        paddingLeft: "10px",
     }
 })
 
@@ -42,6 +45,7 @@ const ListView = (props : ListViewProps): ReactElement => {
         </Box>
         <Box mt={3}>
             <List>
+                {props.displayData.length === 0 && <div className={classes.emptyMessage}>No records found.</div>}
                 {props.displayData.map((data) => {
                     return(
                     <Link to={data.linkURL}>
