@@ -1,8 +1,9 @@
 import { Schema, Document, model } from 'mongoose';
 
 export interface IUser extends Document {
-    email: string;
-    name: string
+    email: string,
+    name: string,
+    isParent: boolean
 }
 
 const userSchema: Schema = new Schema({
@@ -13,6 +14,10 @@ const userSchema: Schema = new Schema({
   },
   name: {
     type: String
+  },
+  isParent: {
+    type: Boolean,
+    default: false
   }
 });
 

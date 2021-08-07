@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ListView, { ListViewData } from '../component/ListView';
-import { IChild, IUser } from '../types/types';
+import { IChild, IHomeData, IUser } from '../types/types';
 import AddChild from './AddChild';
 import { useChildren } from '../store/store';
 import { useCurrentUser } from '../hooks/use-current-user';
@@ -22,6 +22,14 @@ const transformChildren = (children: IChild[]): ListViewData[] => children.map((
     linkURL: `/children/${child.id}/classes`
 }));
 
+const getHomeData = async (userId: string, token: string): Promise<IHomeData> => {
+    return (await axios.get(`/api/home/${userId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })).data as IHomeData;
+}
+
 const Home = (): React.ReactElement => {
     const user = useCurrentUser();
     const { getAccessTokenSilently } = useAuth0();
@@ -30,7 +38,12 @@ const Home = (): React.ReactElement => {
     useEffect(() => {
         getAccessTokenSilently()
             .then((token) => {
-                getChildren(user, token).then(children => set(children));
+                getHomeData(user.id, token).then(data => {
+                    if(data.user.isParent) {
+                        set(data.children as IChild[]);
+                    }
+                })
+                // getChildren(user, token).then(children => set(children));
             });
     }, []);
    

@@ -3,7 +3,7 @@ import React from 'react';
 import { Container, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
-import Classes from './pages/Classes';
+import ChildClasses from './pages/ChildClasses';
 import TopBar from './component/TopBar';
 import Auth0ProviderWithHistory from './auth/Auth0ProviderWithHistory';
 import ProtectedRoute from "./auth/ProtectedRoute";
@@ -25,7 +25,7 @@ const App = (): React.ReactElement => {
             <Container className={classes.root}>
               <Switch>
                 <ProtectedRoute exact path="/" component={Home} />
-                <ProtectedRoute exact path="/children/:id/classes" component={Classes} />
+                <ProtectedRoute exact path="/children/:id/classes" component={ChildClasses} />
               </Switch>
             </Container>
         </Auth0ProviderWithHistory>
