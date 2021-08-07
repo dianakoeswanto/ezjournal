@@ -20,7 +20,7 @@ const transformClasses = (classes: IClass[]): ListViewData[] => classes.map((kla
 }));
 
 const getHomeData = async (userId: string, token: string): Promise<IHomeData> => {
-    return (await axios.get(`/api/home/${userId}`, {
+    return (await axios.get(`/api/home`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
@@ -48,16 +48,16 @@ const Home = (): React.ReactElement => {
     return (
         <div>
             {
-                children.length != 0 ? (
-                    <ListView 
-                        title="My Children" 
-                        displayData={transformChildren(children)}
-                        addButton={<AddChild />}
+                children.length === 0 && classes.length !== 0 ? (
+                    <ListView
+                        title="My Class"
+                        displayData={transformClasses(classes)}
                     />
                 ) : (
-                    <ListView 
-                        title="My Class" 
-                        displayData={transformClasses(classes)}
+                    <ListView
+                        title="My Children"
+                        displayData={transformChildren(children)}
+                        addButton={<AddChild />}
                     />
                 )
             }
