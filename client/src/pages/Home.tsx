@@ -32,34 +32,36 @@ const Home = (): React.ReactElement => {
     const { getAccessTokenSilently } = useAuth0();
     const [{ children }, { set }] = useChildren();
     const [classes, setClasses] = useState<IClass[]>([]);
-    let returnedUser: IUser = {id: '', email: '', name: ''};
 
     useEffect(() => {
         getAccessTokenSilently()
             .then((token) => {
                 getHomeData(user.id, token)
                     .then(data => {
-                        returnedUser = data.user;
-                        console.log(returnedUser.isParent);
-                        if(data.user.isParent) {
-                            set(data.children as IChild[]);
-                        } else {
-                            setClasses(data.classes as IClass[])
+                            set(data.children);
+                            setClasses(data.classes)
                         }
-                    })
+                    )
             });
     }, []);
    
     return (
         <div>
-            <ListView 
-                title="My Children" 
-                displayData={transformChildren(children)}
-                addButton={<AddChild />}
-            />
+            {
+                children.length != 0 ? (
+                    <ListView 
+                        title="My Children" 
+                        displayData={transformChildren(children)}
+                        addButton={<AddChild />}
+                    />
+                ) : (
+                    <ListView 
+                        title="My Class" 
+                        displayData={transformClasses(classes)}
+                    />
+                )
+            }
         </div>
-
-        
     );
 }
 

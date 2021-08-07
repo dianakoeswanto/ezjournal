@@ -11,7 +11,7 @@ const getChildWithClasses = async (studentId: string): Promise<{child: IChild, c
     return {child, classes};
 }
 
-const transformClasses = (studentId: string, classes: IClass[]) => classes.map((klass) => ({
+const transformClasses = (classes: IClass[]) => classes.map((klass) => ({
         id: klass._id,
         displayName: `${klass.className} with ${klass.teacher?.name} - ${klass.classDay} ${klass.classTime}`,
         linkURL: `classes/${klass._id}/lessons`
@@ -32,7 +32,7 @@ const ChildClasses = () : ReactElement => {
     return (
         <ListView 
             title={title} 
-            displayData={transformClasses(id, childClasses)} 
+            displayData={transformClasses(childClasses)} 
             addButton={<AddClass studentId={id} />} 
         />
     )
