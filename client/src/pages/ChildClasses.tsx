@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import ListView from '../component/ListView';
-import { useStudentClasses } from '../store/student-class-store';
+import { useChildClasses } from '../store/child-class-store';
 import { IChild, IClass } from '../types/types';
 import AddClass from './AddClass';
 
@@ -17,10 +17,10 @@ const transformClasses = (studentId: string, classes: IClass[]) => classes.map((
         linkURL: `classes/${klass._id}/lessons`
 }))
 
-const Classes = () : ReactElement => {
+const ChildClasses = () : ReactElement => {
     const { id } = useParams<{ id: string }>();
     const [title, setTitle] = useState<string>('Classes');
-    const [{studentClasses}, {set}] = useStudentClasses();
+    const [{childClasses}, {set}] = useChildClasses();
     
     useEffect(() => {
         getChildWithClasses(id).then(({child, classes}) => {
@@ -32,10 +32,10 @@ const Classes = () : ReactElement => {
     return (
         <ListView 
             title={title} 
-            displayData={transformClasses(id, studentClasses)} 
+            displayData={transformClasses(id, childClasses)} 
             addButton={<AddClass studentId={id} />} 
         />
     )
 }
 
-export default Classes;
+export default ChildClasses;

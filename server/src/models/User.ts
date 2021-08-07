@@ -2,6 +2,7 @@ import { Schema, Document, model } from 'mongoose';
 
 export interface IUser extends Document {
     email: string;
+    name: string
 }
 
 const userSchema: Schema = new Schema({

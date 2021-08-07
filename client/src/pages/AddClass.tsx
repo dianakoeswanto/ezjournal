@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { ReactElement, useState } from "react";
 import { useParams } from "react-router-dom";
 import SimpleModal from "../component/SimpleModal";
-import { useStudentClasses } from "../store/student-class-store";
+import { useChildClasses } from "../store/child-class-store";
 import { IClass } from "../types/types";
 
 interface AddClassProps {
@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 
 const AddClass = (props: AddClassProps): ReactElement => {
     const classes = useStyles();
-    const [_, { add }] = useStudentClasses();
+    const [_, { add }] = useChildClasses();
     const [open, setOpen] = useState(false);
     const [fields, setFields] = useState({
         className: '',
@@ -132,8 +132,6 @@ const AddClass = (props: AddClassProps): ReactElement => {
 
     const handleSubmit = () => {
         if(isFormValid()) {
-            console.log("========", fields);
-            console.log("Form valid, submitting");
             axios.post('/api/children/classes', {...fields, studentId: props.studentId})
                 .then((response) => {
                     const { data: { newClass }} = response;
