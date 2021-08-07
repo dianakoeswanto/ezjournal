@@ -4,7 +4,6 @@ import ListView, { ListViewData } from '../component/ListView';
 import { IChild, IClass, IHomeData, IUser } from '../types/types';
 import AddChild from './AddChild';
 import { useChildren } from '../store/store';
-import { useCurrentUser } from '../hooks/use-current-user';
 import { useAuth0 } from '@auth0/auth0-react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 
@@ -20,7 +19,7 @@ const transformClasses = (classes: IClass[]): ListViewData[] => classes.map((kla
     linkURL: `/classes/${klass._id}/lessons`
 }));
 
-const getHomeData = async (userId: string, token: string): Promise<IHomeData> => {
+const getHomeData = async (token: string): Promise<IHomeData> => {
     return (await axios.get(`/api/home`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -29,7 +28,6 @@ const getHomeData = async (userId: string, token: string): Promise<IHomeData> =>
 }
 
 const Home = (): React.ReactElement => {
-    const user = useCurrentUser();
     const { getAccessTokenSilently } = useAuth0();
     const [{ children }, { set }] = useChildren();
     const [classes, setClasses] = useState<IClass[]>([]);
@@ -37,7 +35,7 @@ const Home = (): React.ReactElement => {
     useEffect(() => {
         getAccessTokenSilently()
             .then((token) => {
-                getHomeData(user.id, token)
+                getHomeData(token)
                     .then(data => {
                             set(data.children);
                             setClasses(data.classes)

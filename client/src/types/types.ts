@@ -18,7 +18,7 @@ export interface IClass {
 }
 
 export interface IUser {
-    id: string,
+    _id: string,
     email: string,
     name: string,
     isParent?: boolean,

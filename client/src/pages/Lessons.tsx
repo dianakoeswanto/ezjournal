@@ -14,7 +14,19 @@ export interface LessonsProps {
 }
 
 const isTeacher = (user?: IUser, teacher?: IUser) : boolean => {
-    return user?.id === teacher?.id
+    console.log("=====", user);
+    console.log("=====", teacher);
+    console.log("````", user?._id === teacher?._id);
+    return user?._id === teacher?._id
+}
+
+const getPageTitle = (user?:IUser, teacher?: IUser, klass?: IClass): string => {
+    if(isTeacher(user, teacher)) {
+        console.log("teacher");
+        return `${klass?.student.firstname} ${klass?.student.lastname} ${klass?.className}'s lessons`
+    }
+
+    return `${klass?.student.firstname} ${klass?.className} lessons with ${teacher?.name}`;
 }
 
 const transformLessons = (lessons: ILesson[]) => lessons.map((lesson) => ({
@@ -45,7 +57,7 @@ const Lessons = (props: LessonsProps): ReactElement => {
             .then((token) => {
                 getLessons(class_id, token)
                     .then(({user, klass, lessons}) => {
-                        setUser(user as IUser);
+                        setUser(user);
                         setKlass(klass);
                         setLessons(lessons);
             })
@@ -54,7 +66,7 @@ const Lessons = (props: LessonsProps): ReactElement => {
     }, [])
     return (
         <ListView 
-            title={`${klass?.student.firstname} ${klass?.student.lastname} ${klass?.className}'s lessons`}
+            title={getPageTitle(user, klass?.teacher, klass)}
             displayData={transformLessons(lessons)}
             avatarIcon={<ScheduleIcon />}
             addButton={isTeacher(user, klass?.teacher) ? <AddLesson classId={class_id}/> : undefined }
