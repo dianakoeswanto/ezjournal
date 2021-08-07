@@ -25,8 +25,8 @@ export interface IUser {
 
 export interface IHomeData {
     user: IUser,
-    children: IChild[] | [],
-    classes: IClass[] | [],
+    children: IChild[],
+    classes: IClass[],
 }
 export interface StoreState {
     children: IChild[],
