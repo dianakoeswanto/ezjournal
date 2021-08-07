@@ -8,7 +8,7 @@ import AddClass from './AddClass';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const getChildWithClasses = async (studentId: string, token: string): Promise<{child: IChild, classes: IClass[]}> => {
-    const {data : {child, classes}} = await axios.get(`/api/classes/student=${studentId}`, {
+    const {data : {child, classes}} = await axios.get(`/api/classes?student=${studentId}`, {
         headers: { Authorization: `Bearer ${token}` }
     });
     return {child, classes};
