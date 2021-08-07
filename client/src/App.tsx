@@ -5,7 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Classes from './pages/Classes';
 import TopBar from './component/TopBar';
-import Auth0ProviderWithHistory from './auth/auth0-provider-with-history';
+import Auth0ProviderWithHistory from './auth/Auth0ProviderWithHistory';
+import ProtectedRoute from "./auth/ProtectedRoute";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -23,8 +24,8 @@ const App = (): React.ReactElement => {
             <TopBar />
             <Container className={classes.root}>
               <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/children/:id/classes" component={Classes} />
+                <ProtectedRoute exact path="/" component={Home} />
+                <ProtectedRoute exact path="/children/:id/classes" component={Classes} />
               </Switch>
             </Container>
         </Auth0ProviderWithHistory>
