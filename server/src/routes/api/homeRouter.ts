@@ -1,16 +1,16 @@
-import { Router } from "express";
-import Class, { IClass } from "../../models/Class";
-import Student, { IStudent } from "../../models/Student";
-import User, { IUser } from "../../models/User";
+import { Router } from 'express';
+import Class, { IClass } from '../../models/Class';
+import Student, { IStudent } from '../../models/Student';
+import User, { IUser } from '../../models/User';
+import { getCurrentUser } from '../util';
 
 const homeRouter: Router = Router();
 
-homeRouter.get('/:user_id', async(request, response) => {
-    const userId: string = request.params.user_id;
-
-    const user: IUser | null = await User.findById(userId);
+homeRouter.get('/', async(request, response) => {
+    const auth0User = await getCurrentUser(request);
+    const user: IUser | null = await User.findOne({ email: auth0User.email });
     if(!user) {
-        response.status(400).send(`Unable to find user with id ${userId}`);
+        response.status(400).send('Unable to find user.');
     }
 
     if(user!.isParent) {

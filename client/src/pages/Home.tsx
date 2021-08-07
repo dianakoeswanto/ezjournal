@@ -20,7 +20,7 @@ const transformClasses = (classes: IClass[]): ListViewData[] => classes.map((kla
 }));
 
 const getHomeData = async (userId: string, token: string): Promise<IHomeData> => {
-    return (await axios.get(`/api/home/${userId}`, {
+    return (await axios.get(`/api/home`, {
         headers: {
             Authorization: `Bearer ${token}`,
         },
