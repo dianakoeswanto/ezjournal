@@ -1,10 +1,10 @@
-import { FormControl, makeStyles, MenuItem, TextField } from "@material-ui/core";
-import axios from "axios";
-import React, { ReactElement, useState } from "react";
-import { useParams } from "react-router-dom";
-import SimpleModal from "../component/SimpleModal";
-import { useChildClasses } from "../store/child-class-store";
-import { IClass } from "../types/types";
+import { FormControl, makeStyles, MenuItem, TextField } from '@material-ui/core';
+import axios from 'axios';
+import React, { ReactElement, useState } from 'react';
+import SimpleModal from '../component/SimpleModal';
+import { useChildClasses } from '../store/child-class-store';
+import { IClass } from '../types/types';
+import { useAuth0 } from '@auth0/auth0-react';
 
 interface AddClassProps {
     studentId: string
@@ -34,7 +34,8 @@ const AddClass = (props: AddClassProps): ReactElement => {
         teacherEmail: ''
     });
 
-    const[errors, setErrors] = useState({...fields})
+    const[errors, setErrors] = useState({...fields});
+    const { getAccessTokenSilently } = useAuth0();
     
     const resetErrors = () => {
         setErrors({
@@ -130,22 +131,24 @@ const AddClass = (props: AddClassProps): ReactElement => {
         </form>
     );
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if(isFormValid()) {
-            axios.post('/api/children/classes', {...fields, studentId: props.studentId})
-                .then((response) => {
-                    const { data: { newClass }} = response;
-                    const klass: IClass = {
-                        _id: newClass._id,
-                        className: newClass.className,
-                        classDay: newClass.classDay,
-                        classTime: newClass.classTime,
-                        student: newClass.student,
-                        teacher: newClass.teacher
-                    }
-                    add(klass);
-                    setOpen(false);
-                });
+            const token = await getAccessTokenSilently();
+            const response = await axios.post('/api/children/classes', {...fields, studentId: props.studentId}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const { data: { newClass }} = response;
+            const klass: IClass = {
+                _id: newClass._id,
+                className: newClass.className,
+                classDay: newClass.classDay,
+                classTime: newClass.classTime,
+                student: newClass.student,
+                teacher: newClass.teacher
+            }
+            add(klass);
+            setOpen(false);
         }
     }
 
