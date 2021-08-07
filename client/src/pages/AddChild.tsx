@@ -1,10 +1,10 @@
 import { TextField } from '@material-ui/core';
-import axios, {AxiosResponse} from "axios";
+import axios, {AxiosResponse} from 'axios';
 import React, { useState } from "react";
 import SimpleModal from '../component/SimpleModal';
-import { IChild, IClass, IUser } from '../types/types';
-import {useCurrentUser} from "../hooks/use-current-user";
+import { IChild, IClass } from '../types/types';
 import { useChildren } from '../store/store';
+import { useAuth0 } from "@auth0/auth0-react";
 
 type AddChildResponse = {
     newChild: {
@@ -18,7 +18,6 @@ type AddChildResponse = {
     }
 };
 
-
 const AddChild = () : React.ReactElement => {
     const [fields, setFields] = useState({
         firstname: '',
@@ -29,8 +28,9 @@ const AddChild = () : React.ReactElement => {
         lastname: null
     });
     const [open, setOpen] = useState(false);
-    const currentUser: IUser = useCurrentUser();
     const [_, { add }] = useChildren();
+
+    const { getAccessTokenSilently } = useAuth0();
 
     const resetErrors = () => {
         setErrors({
@@ -81,22 +81,24 @@ const AddChild = () : React.ReactElement => {
         return isValid;
     }
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if(isFormValid()) {
-            axios.post<any, AxiosResponse<AddChildResponse>>('/api/children/', {...fields, parentId: currentUser.id})
-                .then((response) => {
-                    const { data: { newChild }} = response;
-                    const child: IChild = {
-                        id: newChild._id,
-                        displayName: `${newChild.firstname} ${newChild.lastname}`,
-                        firstname: newChild.firstname,
-                        lastname: newChild.lastname,
-                        parent: newChild.parent._id,
-                        classes: newChild.classes as IClass[],
-                    }
-                    add(child);
-                    setOpen(false);
-                });
+            const token = await getAccessTokenSilently();
+            const response = await axios.post<any, AxiosResponse<AddChildResponse>>('/api/children/', {...fields}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const { data: { newChild }} = response;
+            const child: IChild = {
+                id: newChild._id,
+                displayName: `${newChild.firstname} ${newChild.lastname}`,
+                firstname: newChild.firstname,
+                lastname: newChild.lastname,
+                parent: newChild.parent._id,
+                classes: newChild.classes as IClass[],
+            }
+            add(child);
+            setOpen(false);
         }
     }
 

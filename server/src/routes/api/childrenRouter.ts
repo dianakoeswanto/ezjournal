@@ -1,7 +1,8 @@
-import { Router } from "express";
-import Class, { IClass } from "../../models/Class";
-import Student, { IStudent } from "../../models/Student";
-import User, { IUser } from "../../models/User";
+import { Router } from 'express';
+import Class, { IClass } from '../../models/Class';
+import Student, { IStudent } from '../../models/Student';
+import User, { IUser } from '../../models/User';
+import { getCurrentUser } from '../util';
 
 const childrenRouter: Router = Router();
 
@@ -28,10 +29,14 @@ childrenRouter.get('/:id', async(request, response) => {
 });
 
 childrenRouter.post('/', async(request, response) => {
-    const { firstname, lastname, parentId } = request.body;
-    //todo check if all body are passed in
+    const auth0User = await getCurrentUser(request);
+    const user: IUser | null = await User.findOne({ email: auth0User.email });
+    if (!user) {
+        response.status(401).json({ error: 'Unauthorized' });
+        return;
+    }
 
-    const user: IUser | null = await User.findById(parentId);
+    const { firstname, lastname } = request.body;
     const child: IStudent = new Student({firstname, lastname, parent: user});
     const newChild: IStudent = await child.save();
     const allChildren: IStudent[] = await Student.find().populate("parent");
