@@ -28,6 +28,16 @@ export interface IHomeData {
     children: IChild[] | [],
     classes: IClass[] | [],
 }
+
+export interface ILesson {
+    _id: String,
+    time: String,
+    positiveComments: String,
+    additionalComments: String
+    class: IClass,
+    improvements: Object
+}
+
 export interface StoreState {
     children: IChild[],
 }
