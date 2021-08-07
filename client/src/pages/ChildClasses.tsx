@@ -6,6 +6,7 @@ import { useChildClasses } from '../store/child-class-store';
 import { IChild, IClass } from '../types/types';
 import AddClass from './AddClass';
 import { useAuth0 } from '@auth0/auth0-react';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 const getChildWithClasses = async (studentId: string, token: string): Promise<{child: IChild, classes: IClass[]}> => {
     const {data : {child, classes}} = await axios.get(`/api/classes?student=${studentId}`, {
@@ -38,7 +39,8 @@ const ChildClasses = () : ReactElement => {
         <ListView 
             title={title} 
             displayData={transformClasses(childClasses)} 
-            addButton={<AddClass studentId={id} />} 
+            addButton={<AddClass studentId={id} />}
+            avatarIcon={<MenuBookIcon />}
         />
     )
 }
