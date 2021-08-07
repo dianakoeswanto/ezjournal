@@ -1,6 +1,5 @@
 import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
-import { AddCircle } from "@material-ui/icons";
-import { Dispatch, ReactElement } from "react";
+import { ReactElement } from "react";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles({

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 export interface IChild {
     id: string,
     displayName?: string,
@@ -31,11 +32,11 @@ export interface IHomeData {
 
 export interface ILesson {
     _id: String,
-    time: String,
+    time: DateTime,
     positiveComments: String,
-    additionalComments: String
+    additionalComments?: String,
     class: IClass,
-    improvements: Object
+    improvements: String,
 }
 
 export interface StoreState {
