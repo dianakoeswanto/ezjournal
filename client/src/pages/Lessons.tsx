@@ -9,21 +9,13 @@ import AddLesson from './AddLesson';
 import { DateTime } from 'luxon';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
-export interface LessonsProps {
-
-}
-
 const isTeacher = (user?: IUser, teacher?: IUser) : boolean => {
-    console.log("=====", user);
-    console.log("=====", teacher);
-    console.log("````", user?._id === teacher?._id);
     return user?._id === teacher?._id
 }
 
 const getPageTitle = (user?:IUser, teacher?: IUser, klass?: IClass): string => {
     if(isTeacher(user, teacher)) {
-        console.log("teacher");
-        return `${klass?.student.firstname} ${klass?.student.lastname} ${klass?.className}'s lessons`
+        return `${klass?.student.firstname} ${klass?.student.lastname}: ${klass?.className} lessons`
     }
 
     return `${klass?.student.firstname} ${klass?.className} lessons with ${teacher?.name}`;
@@ -45,7 +37,7 @@ const getLessons = async (classId: string, token: string): Promise<{user: IUser,
     return {user, klass, lessons}
 }
 
-const Lessons = (props: LessonsProps): ReactElement => {
+const Lessons = (): ReactElement => {
     const { class_id } = useParams<{ class_id: string }>();
     const { getAccessTokenSilently } = useAuth0();
     const [{ lessons }, { setLessons }] = useLessons();

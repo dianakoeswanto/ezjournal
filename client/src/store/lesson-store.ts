@@ -1,5 +1,5 @@
 import {createStore, createHook, Action} from 'react-sweet-state';
-import { IClass, ILesson } from '../types/types';
+import { ILesson } from '../types/types';
 
 interface LessonStore {
     lessons: ILesson[],
@@ -16,7 +16,7 @@ const actions = {
     addLesson: (lesson: ILesson): Action<LessonStore> =>
         ({ setState, getState }) => {
             const { lessons } = getState();
-            setState({ lessons: [...lessons, lesson] })
+            setState({ lessons: [lesson, ...lessons] })
         }
 };
 

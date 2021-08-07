@@ -1,4 +1,4 @@
-import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
+import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Link } from "react-router-dom";
 

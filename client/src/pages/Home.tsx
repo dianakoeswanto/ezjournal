@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import ListView, { ListViewData } from '../component/ListView';
-import { IChild, IClass, IHomeData, IUser } from '../types/types';
+import { IChild, IClass, IHomeData } from '../types/types';
 import AddChild from './AddChild';
 import { useChildren } from '../store/store';
 import { useAuth0 } from '@auth0/auth0-react';

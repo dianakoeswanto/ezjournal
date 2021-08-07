@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { Container, createStyles, makeStyles, Theme } from '@material-ui/core';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import ChildClasses from './pages/ChildClasses';
 import TopBar from './component/TopBar';
