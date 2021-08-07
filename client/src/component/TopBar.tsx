@@ -1,9 +1,8 @@
 import { AppBar, createStyles, IconButton, makeStyles, Menu, MenuItem, Theme, Toolbar, Typography } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
-import MenuIcon from '@material-ui/icons/Menu';
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@material-ui/core/Avatar';
+import { deepOrange } from '@material-ui/core/colors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,6 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       flexGrow: 1,
       marginLeft: "10px",
+    },
+    orange: {
+        color: theme.palette.getContrastText(deepOrange['A200']),
+        backgroundColor: deepOrange['A200'],
     },
   }),
 );
@@ -53,7 +56,7 @@ const TopBar = (): React.ReactElement => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle />
+                <Avatar className={classes.orange}>X</Avatar>
               </IconButton>
               <Menu
                 id="menu-appbar"
