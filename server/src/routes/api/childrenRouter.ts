@@ -45,20 +45,24 @@ childrenRouter.post('/', async(request, response) => {
 })
 
 childrenRouter.post('/classes', async(request, response) => {
-    const {studentId, className, classDay, classTime, teacherName, teacherEmail} = request.body;
+    const { studentId, className, classDay, classTime, teacherName, teacherEmail } = request.body;
     const child: IStudent | null = await Student.findById(studentId);
     if(!child) {
-        response.status(400).send(`Unable to find student with id ${studentId}`)
+        response.status(404).send(`Unable to find student with id ${studentId}`);
+        return;
     }
 
-    const teacher: IUser = new User({name: teacherName, email: teacherEmail});
-    await teacher.save();
+    let teacher = await User.findOne({ email: teacherEmail });
+    if (!teacher) {
+        teacher = new User({name: teacherName, email: teacherEmail});
+        await teacher.save();
+    }
 
     const newClass: IClass = new Class({className, classDay, classTime, teacher, student: child});
     await newClass.save();
 
-    child?.classes.push(newClass._id);
-    await child?.save();
+    child.classes.push(newClass._id);
+    await child.save();
 
     response.status(200).json({newClass});
 })

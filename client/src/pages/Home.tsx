@@ -6,6 +6,7 @@ import AddChild from './AddChild';
 import { useChildren } from '../store/store';
 import { useCurrentUser } from '../hooks/use-current-user';
 import { useAuth0 } from '@auth0/auth0-react';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 const transformChildren = (children: IChild[]): ListViewData[] => children.map((child) => ({
     id: child.id,
@@ -52,6 +53,7 @@ const Home = (): React.ReactElement => {
                     <ListView
                         title="My Classes"
                         displayData={transformClasses(classes)}
+                        avatarIcon={<MenuBookIcon />}
                     />
                 ) : (
                     <ListView

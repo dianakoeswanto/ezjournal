@@ -3,6 +3,7 @@ import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@material-ui/core/Avatar';
 import { deepOrange } from '@material-ui/core/colors';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -24,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const TopBar = (): React.ReactElement => {
-  const auth = true;
   const classes = useStyles();
   const { logout, user } = useAuth0();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const history = useHistory();
   const open = Boolean(anchorEl);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -44,7 +45,11 @@ const TopBar = (): React.ReactElement => {
           {/*<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">*/}
           {/*  <MenuIcon />*/}
           {/*</IconButton>*/}
-            <Avatar variant="square" alt="ezjournal" src={`${window.location.origin}/ezjournal.png`} />
+            <Avatar variant="square"
+                    alt="ezjournal"
+                    src={`${window.location.origin}/ezjournal.png`}
+                    onClick={() => history.push('/')}
+                    style={{cursor: 'pointer'}}/>
           <Typography variant="h6" className={classes.title}>
             EZJournal
           </Typography>

@@ -5,9 +5,13 @@ import ListView from '../component/ListView';
 import { useChildClasses } from '../store/child-class-store';
 import { IChild, IClass } from '../types/types';
 import AddClass from './AddClass';
+import { useAuth0 } from '@auth0/auth0-react';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
-const getChildWithClasses = async (studentId: string): Promise<{child: IChild, classes: IClass[]}> => {
-    const {data : {child, classes}} = await axios.get(`/api/classes/student=${studentId}`);
+const getChildWithClasses = async (studentId: string, token: string): Promise<{child: IChild, classes: IClass[]}> => {
+    const {data : {child, classes}} = await axios.get(`/api/classes?student=${studentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
     return {child, classes};
 }
 
@@ -21,19 +25,22 @@ const ChildClasses = () : ReactElement => {
     const { id } = useParams<{ id: string }>();
     const [title, setTitle] = useState<string>('Classes');
     const [{childClasses}, {set}] = useChildClasses();
-    
-    useEffect(() => {
-        getChildWithClasses(id).then(({child, classes}) => {
-            setTitle(`${child.firstname}'s Classes`);
-            set(classes);
-        })
+    const { getAccessTokenSilently } = useAuth0();
+
+    // @ts-ignore
+    useEffect(async () => {
+        const token = await getAccessTokenSilently();
+        const { child, classes } = await getChildWithClasses(id, token);
+        setTitle(`${child.firstname}'s Classes`);
+        set(classes);
     }, []);
 
     return (
         <ListView 
             title={title} 
             displayData={transformClasses(childClasses)} 
-            addButton={<AddClass studentId={id} />} 
+            addButton={<AddClass studentId={id} />}
+            avatarIcon={<MenuBookIcon />}
         />
     )
 }
