@@ -3,6 +3,7 @@ import { AccountCircle } from '@material-ui/icons';
 import MenuIcon from '@material-ui/icons/Menu';
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      marginLeft: "10px",
     },
   }),
 );
@@ -36,9 +38,10 @@ const TopBar = (): React.ReactElement => {
   return (
     <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          {/*<IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">*/}
+          {/*  <MenuIcon />*/}
+          {/*</IconButton>*/}
+            <Avatar variant="square" alt="ezjournal" src={`${window.location.origin}/ezjournal.png`} />
           <Typography variant="h6" className={classes.title}>
             EZJournal
           </Typography>
