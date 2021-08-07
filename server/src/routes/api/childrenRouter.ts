@@ -8,6 +8,7 @@ const childrenRouter: Router = Router();
 childrenRouter.get('/parent=:parent_id', async(request, response) => {
     const userId: string = request.params.parent_id;
     console.log("Getting children for user id ", userId);
+    console.log("Getting children for user ", JSON.stringify(request.user));
 
     const children: IStudent[] = await Student.find({parent: userId});
     console.log(children);
