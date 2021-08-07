@@ -1,45 +1,41 @@
 import axios from 'axios';
-import React, { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import ListView, { ListViewData } from '../component/ListView';
-import { IClass } from '../types/types';
+import ListView from '../component/ListView';
+import { useStudentClasses } from '../store/student-class-store';
+import { IChild, IClass } from '../types/types';
 import AddClass from './AddClass';
 
-const getClasses = async (studentId: string): Promise<IClass[]> => {
-    return (await axios.get(`/api/classes/student=${studentId}`)).data.result as IClass[];
+const getChildWithClasses = async (studentId: string): Promise<{child: IChild, classes: IClass[]}> => {
+    const {data : {child, classes}} = await axios.get(`/api/classes/student=${studentId}`);
+    return {child, classes};
 }
 
-const getClassesDisplayData = (classes: IClass[]): ListViewData[] => {
-    return classes.map((clazz: IClass) => {
-        return {
-            id: clazz.id,
-            displayName: `${clazz.className} - ${clazz.classTime.toLocaleDateString()}`,
-            linkURL: `children/:id/classes/:class_id/lessons`
-        } as ListViewData;
-    });
-}
-
-const getPageTitle = async (studentId: string): Promise<string> => {
-    const student = (await axios.get(`/api/children/${studentId}`)).data;
-    return !student ? "Classes" : `${student.firstname}'s Classes`;
-}
+const transformClasses = (studentId: string, classes: IClass[]) => classes.map((klass) => ({
+        id: klass._id,
+        displayName: `${klass.className} with ${klass.teacher?.name} - ${klass.classDay} ${klass.classTime}`,
+        linkURL: `classes/${klass._id}/lessons`
+}))
 
 const Classes = () : ReactElement => {
-    const [data, setData] = useState<ListViewData[]>([]);
-    const [title, setTitle] = useState<string>('Classes');
     const { id } = useParams<{ id: string }>();
+    const [title, setTitle] = useState<string>('Classes');
+    const [{studentClasses}, {set}] = useStudentClasses();
     
     useEffect(() => {
-        (async () => {
-            const classes = await getClasses(id) || [];
-            setTitle(await getPageTitle(id));
-            setData(getClassesDisplayData(classes));
-        })();
+        getChildWithClasses(id).then(({child, classes}) => {
+            setTitle(`${child.firstname}'s Classes`);
+            set(classes);
+        })
     }, []);
 
     return (
-        <ListView title={title} displayData={data} addButton={<AddClass />}></ListView>
-    );
+        <ListView 
+            title={title} 
+            displayData={transformClasses(id, studentClasses)} 
+            addButton={<AddClass studentId={id} />} 
+        />
+    )
 }
 
 export default Classes;

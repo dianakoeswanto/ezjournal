@@ -2,7 +2,7 @@ import { TextField } from '@material-ui/core';
 import axios, {AxiosResponse} from "axios";
 import React, { useState } from "react";
 import SimpleModal from '../component/SimpleModal';
-import { IChild, IUser } from '../types/types';
+import { IChild, IClass, IUser } from '../types/types';
 import {useCurrentUser} from "../hooks/use-current-user";
 import { useChildren } from '../store/store';
 
@@ -89,8 +89,10 @@ const AddChild = () : React.ReactElement => {
                     const child: IChild = {
                         id: newChild._id,
                         displayName: `${newChild.firstname} ${newChild.lastname}`,
+                        firstname: newChild.firstname,
+                        lastname: newChild.lastname,
                         parent: newChild.parent._id,
-                        classes: newChild.classes,
+                        classes: newChild.classes as IClass[],
                     }
                     add(child);
                     setOpen(false);

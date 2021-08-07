@@ -8,12 +8,14 @@ import { useCurrentUser } from '../hooks/use-current-user';
 
 
 const getChildren = async (user: IUser): Promise<IChild[]> => {
-    return (await axios.get(`/api/children/parent=${user.id}`)).data.result as IChild[];
+    const children =  (await axios.get(`/api/children/parent=${user.id}`)).data.children as IChild[];
+    console.log(children);
+    return children;
 }
 
 const transformChildren = (children: IChild[]): ListViewData[] => children.map((child) => ({
     id: child.id,
-    displayName: child.displayName,
+    displayName: `${child.firstname} ${child.lastname}`,
     linkURL: `/children/${child.id}/classes`
 }));
 

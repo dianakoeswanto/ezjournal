@@ -24,3 +24,10 @@ const Store = createStore<StoreState, Actions>({
 });
 
 export const useChildren = createHook(Store);
+
+const getChildById = (state: StoreState, childId: string) => ({
+    child: state.children.find((child: IChild) => child.id === childId),
+})
+export const useChild = createHook(Store, {
+    selector: getChildById,
+})

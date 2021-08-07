@@ -1,16 +1,19 @@
 export interface IChild {
     id: string,
-    displayName: string,
+    displayName?: string,
+    firstname: string,
+    lastname: string,
     parent: string,
-    classes: Array<Object>
+    classes: Array<IClass>
 }
 
 export interface IClass {
-    id: string;
+    _id: string;
     className: string;
-    classTime: Date;
-    student: Object;
-    teacher: Object;
+    classDay: string;
+    classTime: string;
+    student: IChild;
+    teacher: IUser;
 }
 
 export interface IUser {
