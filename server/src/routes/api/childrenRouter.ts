@@ -48,7 +48,7 @@ childrenRouter.post('/classes', async(request, response) => {
     const { studentId, className, classDay, classTime, teacherName, teacherEmail } = request.body;
     const child: IStudent | null = await Student.findById(studentId);
     if(!child) {
-        response.status(400).send(`Unable to find student with id ${studentId}`);
+        response.status(404).send(`Unable to find student with id ${studentId}`);
         return;
     }
 
