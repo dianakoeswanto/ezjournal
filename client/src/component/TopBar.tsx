@@ -39,6 +39,14 @@ const TopBar = (): React.ReactElement => {
     setAnchorEl(null);
   };
 
+  if (!user) {
+      // Showing nothing is the best way here. This path is hit under 2 different scenarios: when user about to log in
+      // and after user logged out. We can't tell which scenario is happening right now and there doesn't seem to be a visual
+      // that works for both cases. So showing nothing seems like the best option.
+      // @ts-ignore
+      return null;
+  }
+
   return (
     <AppBar position="static">
         <Toolbar>

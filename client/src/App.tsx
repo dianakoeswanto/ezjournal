@@ -23,7 +23,8 @@ const AppContent = () => {
     const { isLoading } = useAuth0();
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        // Show nothing while Auth0 is loading to avoid flicker.
+        return null;
     }
 
     return (
