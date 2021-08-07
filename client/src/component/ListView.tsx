@@ -47,10 +47,10 @@ const ListView = (props : ListViewProps): ReactElement => {
                 {props.displayData.length === 0 && <div className={classes.emptyMessage}>No records found.</div>}
                 {props.displayData.map((data) => {
                     return(
-                    <Link to={data.linkURL}>
+                    <Link key={data.id} to={data.linkURL}>
                         <ListItem key={data.id} button>
                             <ListItemAvatar>
-                                <Avatar src="/broken-image.jpg">
+                                <Avatar>
                                     {props.avatarIcon}
                                 </Avatar>
                             </ListItemAvatar>
