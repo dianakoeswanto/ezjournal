@@ -28,6 +28,7 @@ const App = (): React.ReactElement => {
                 <ProtectedRoute exact path="/" component={Home} />
                 <ProtectedRoute exact path="/children/:id/classes" component={ChildClasses} />
                 <ProtectedRoute exact path="/classes/:class_id/lessons" component={Lessons} />
+                <ProtectedRoute exact path="/children/:id/classes/:class_id/lessons" component={Lessons} />
               </Switch>
             </Container>
         </Auth0ProviderWithHistory>
