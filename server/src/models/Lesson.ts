@@ -1,11 +1,11 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model, Types, Document } from 'mongoose';
 
-export interface ILesson {
+export interface ILesson extends Document {
   time: Date,
   positiveComments: String,
-  additionalComments: String
+  additionalComments?: String
   class: Types.ObjectId,
-  improvements: [Types.ObjectId]
+  improvements: [String]
 }
 
 const lessonSchema = new Schema({
@@ -19,7 +19,6 @@ const lessonSchema = new Schema({
   },
   additionalComments: {
       type: String,
-      required: true,
   },
   class: {
     type: Types.ObjectId,
@@ -27,8 +26,8 @@ const lessonSchema = new Schema({
   },
   improvements: [
     {
-      type: Types.ObjectId,
-      ref: "Task"
+      type: String,
+      required: true,
     }
   ]
 });

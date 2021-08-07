@@ -1,12 +1,13 @@
 import axios from "axios";
-import { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ListView, { ListViewData } from "../component/ListView";
 import { IClass, ILesson, IUser } from "../types/types";
 import { useLessons } from '../store/lesson-store';
 import { useAuth0 } from '@auth0/auth0-react';
-import AddChild from "./AddChild";
-import { MapSharp } from "@material-ui/icons";
+import AddLesson from './AddLesson';
+import { DateTime } from 'luxon';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 export interface LessonsProps {
 
@@ -18,8 +19,8 @@ const isTeacher = (user?: IUser, teacher?: IUser) : boolean => {
 
 const transformLessons = (lessons: ILesson[]) => lessons.map((lesson) => ({
     id: lesson._id,
-    displayName: `Lesson at ${lesson.time}`,
-    linkURL: `${lesson._id}`
+    displayName: `${DateTime.fromISO(lesson.time.toString()).setLocale("au").toFormat("cccc, dd/MM/yyyy")}`,
+    linkURL: `lessons/${lesson._id}`
 }) as ListViewData)
 
 const getLessons = async (classId: string, token: string): Promise<{user: IUser, klass: IClass, lessons: ILesson[]}> => {
@@ -44,7 +45,6 @@ const Lessons = (props: LessonsProps): ReactElement => {
             .then((token) => {
                 getLessons(class_id, token)
                     .then(({user, klass, lessons}) => {
-                        console.log(user, klass, lessons);
                         setUser(user as IUser);
                         setKlass(klass);
                         setLessons(lessons);
@@ -54,9 +54,10 @@ const Lessons = (props: LessonsProps): ReactElement => {
     }, [])
     return (
         <ListView 
-            title={`${klass?.student.firstname} ${klass?.student.lastname}'s lessons`}
+            title={`${klass?.student.firstname} ${klass?.student.lastname} ${klass?.className}'s lessons`}
             displayData={transformLessons(lessons)}
-            addButton={isTeacher(user!, klass!.teacher) ? <AddChild /> : undefined }
+            avatarIcon={<ScheduleIcon />}
+            addButton={isTeacher(user, klass?.teacher) ? <AddLesson classId={class_id}/> : undefined }
         />
     )
 }
