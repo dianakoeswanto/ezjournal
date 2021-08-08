@@ -64,19 +64,30 @@ const Lessons = (): ReactElement => {
     }, []);
 
     const title = getPageTitle(user, klass?.teacher, klass);
-    const breadcrumbs = klass ? [{
-        label: 'Home',
-        to: '/',
-        Icon: HomeIcon,
-    }, {
-        label: `${klass.student.firstname}'s Classes`,
-        to: `/children/${klass.student.id}/classes`,
-        Icon: PersonRoundedIcon,
-    }, {
-        label:title,
-        to : pathname,
-        Icon: MenuBookIcon,
-    }] : [];
+
+    let breadcrumbs = [];
+    if (klass) {
+        breadcrumbs.push({
+            label: 'Home',
+            to: '/',
+            Icon: HomeIcon,
+        });
+
+        if (!isTeacher(user, klass?.teacher)) {
+            breadcrumbs.push({
+                label: `${klass.student.firstname}'s Classes`,
+                to: `/children/${klass.student!._id}/classes`,
+                Icon: PersonRoundedIcon,
+            });
+        }
+
+        breadcrumbs.push({
+            label:title,
+            to : pathname,
+            Icon: MenuBookIcon,
+        });
+    }
+
     return (
         <ListView 
             title={title}

@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 export interface IChild {
+    _id?: string, // Use this one if accessing the child from a class.
     id: string,
     displayName?: string,
     firstname: string,
