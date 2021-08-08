@@ -61,7 +61,7 @@ classesRouter.get('/:class_id/lessons/:lesson_id', async(request, response) => {
     const auth0User = await getCurrentUser(request);
     const user: IUser | null = await User.findOne({ email: auth0User.email });
 
-    const klass: IClass | null = await Class.findById(classId).populate("student");
+    const klass: IClass | null = await Class.findById(classId).populate("student").populate("teacher");
     const lesson: ILesson | null = await Lesson.findById(lessonId);
     response.status(200).json({user, klass, lesson});
 })

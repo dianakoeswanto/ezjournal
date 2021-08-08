@@ -1,11 +1,18 @@
 import axios from "axios";
 import React, { ReactElement, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useLocation, useParams} from "react-router-dom";
 import { IClass, ILesson, IUser } from "../types/types";
 import { useAuth0 } from '@auth0/auth0-react';
 import { DateTime } from 'luxon';
 import { Box, makeStyles, Paper, TextField, Typography } from "@material-ui/core";
 import Skeleton from '@material-ui/lab/Skeleton';
+import BreadcrumbLink from "@material-ui/core/Link";
+import Breadcrumbs from "@material-ui/core/Breadcrumbs";
+import {BreadcrumbData} from "../component/ListView";
+import HomeIcon from "@material-ui/icons/Home";
+import PersonRoundedIcon from "@material-ui/icons/PersonRounded";
+import MenuBookIcon from "@material-ui/icons/MenuBook";
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 
 const useStyles = makeStyles({
@@ -54,6 +61,7 @@ const getLessonDetails = async (
 const TitleSkeleton = () => (
     <>
         <Skeleton variant="text" width={200} />
+        <Skeleton variant="text" width={200} />
         <Skeleton variant="text" width={135} />
     </>
 );
@@ -65,6 +73,7 @@ const ViewLesson = (): ReactElement => {
     const [klass, setKlass] = useState<IClass>();
     const [lesson, setLesson] = useState<ILesson>();
     const [isLoading, setLoading] = useState(true);
+    const { pathname } = useLocation();
 
     useEffect(() => {
         getAccessTokenSilently()
@@ -78,12 +87,52 @@ const ViewLesson = (): ReactElement => {
         })
     }, [])
 
+    const breadcrumbs: BreadcrumbData[] = [];
+    if (klass && lesson) {
+        breadcrumbs.push({
+            label: 'Home',
+            to: '/',
+            Icon: HomeIcon,
+        });
+
+        if (pathname.includes('children')) { // current user is a parent
+            breadcrumbs.push({
+                label: `${klass.student.firstname}'s Classes`,
+                to: `/children/${klass.student!._id}/classes`,
+                Icon: PersonRoundedIcon,
+            });
+        }
+
+        const lessonsLabel  = pathname.includes('children')
+            ? `${klass?.student.firstname} ${klass?.className} lessons with ${klass.teacher?.name}`
+            : `${klass?.student.firstname} ${klass?.student.lastname}: ${klass?.className} lessons`
+        breadcrumbs.push({
+            label: lessonsLabel,
+            to : pathname.substr(0, pathname.lastIndexOf('/')),
+            Icon: MenuBookIcon,
+        });
+
+        breadcrumbs.push({
+            label: getSubTitle(lesson),
+            to: pathname,
+            Icon: ScheduleIcon,
+        });
+    }
+
     return (
             <Paper className={classes.paper}>
                 <Box>
                     {
                         isLoading ? <TitleSkeleton /> : (
                             <>
+                                <Breadcrumbs aria-label="breadcrumb" style={{paddingLeft: "6px", paddingBottom: "12px"}}>
+                                    {breadcrumbs.map(({label, to, Icon}) => (
+                                        <BreadcrumbLink key={label} component={Link} to={to} style={{display: "flex"}}>
+                                            <Icon style={{height: "20px", width: "20px", paddingRight: "3px"}} />
+                                            {label}
+                                        </BreadcrumbLink>
+                                    ))}
+                                </Breadcrumbs>
                                 <Typography className={classes.header} variant="h5">
                                     {getPageTitle(klass)}
                                 </Typography>
