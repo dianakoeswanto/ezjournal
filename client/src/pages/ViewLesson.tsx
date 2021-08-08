@@ -5,6 +5,7 @@ import { IClass, ILesson, IUser } from "../types/types";
 import { useAuth0 } from '@auth0/auth0-react';
 import { DateTime } from 'luxon';
 import { Box, makeStyles, Paper, TextField, Typography } from "@material-ui/core";
+import Skeleton from '@material-ui/lab/Skeleton';
 
 
 const useStyles = makeStyles({
@@ -50,12 +51,20 @@ const getLessonDetails = async (
         return {user, klass, lesson}
 }
 
+const TitleSkeleton = () => (
+    <>
+        <Skeleton variant="text" width={200} />
+        <Skeleton variant="text" width={135} />
+    </>
+);
+
 const ViewLesson = (): ReactElement => {
     const classes = useStyles();
     const { class_id, lesson_id } = useParams<{ class_id: string, lesson_id: string }>();
     const { getAccessTokenSilently } = useAuth0();
     const [klass, setKlass] = useState<IClass>();
     const [lesson, setLesson] = useState<ILesson>();
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         getAccessTokenSilently()
@@ -64,6 +73,7 @@ const ViewLesson = (): ReactElement => {
                     .then(({user, klass, lesson}) => {
                         setKlass(klass);
                         setLesson(lesson);
+                        setLoading(false);
             })
         })
     }, [])
@@ -71,12 +81,18 @@ const ViewLesson = (): ReactElement => {
     return (
             <Paper className={classes.paper}>
                 <Box>
-                    <Typography className={classes.header} variant="h5">
-                        {getPageTitle(klass)}
-                    </Typography>
-                    <Typography className={classes.subTitle} variant="subtitle1">
-                        {getSubTitle(lesson)}
-                    </Typography>
+                    {
+                        isLoading ? <TitleSkeleton /> : (
+                            <>
+                                <Typography className={classes.header} variant="h5">
+                                    {getPageTitle(klass)}
+                                </Typography>
+                                <Typography className={classes.subTitle} variant="subtitle1">
+                                    {getSubTitle(lesson)}
+                                </Typography>
+                            </>
+                        )
+                    }
                 </Box>
                 <Box mt={3}>
                     <TextField
@@ -84,7 +100,7 @@ const ViewLesson = (): ReactElement => {
                         label="The Positives"
                         multiline
                         rows={4}
-                        value={ lesson ? lesson?.positiveComments : " "}
+                        value={ lesson ? lesson?.positiveComments : "Loading content..."}
                         variant="outlined"
                         fullWidth
                         InputProps={{
@@ -98,7 +114,7 @@ const ViewLesson = (): ReactElement => {
                         label="Some Improvements"
                         multiline
                         rows={4}
-                        value={ lesson ? lesson?.improvements : " "}
+                        value={ lesson ? lesson?.improvements : "Loading content..."}
                         variant="outlined"
                         fullWidth
                         InputProps={{
@@ -112,7 +128,7 @@ const ViewLesson = (): ReactElement => {
                         label="Additional Comments"
                         multiline
                         rows={4}
-                        value={ lesson ? lesson?.additionalComments : " "}
+                        value={ lesson ? lesson?.additionalComments : "Loading content..."}
                         variant="outlined"
                         fullWidth
                         InputProps={{
