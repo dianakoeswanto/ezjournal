@@ -53,5 +53,18 @@ classesRouter.post('/:class_id/lesson', async(request, response) => {
     response.status(200).json({newLesson});
 })
 
+classesRouter.get('/:class_id/lessons/:lesson_id', async(request, response) => {
+    const lessonId = request.params.lesson_id;
+    const classId = request.params.class_id;
+    //TODO check body
+
+    const auth0User = await getCurrentUser(request);
+    const user: IUser | null = await User.findOne({ email: auth0User.email });
+
+    const klass: IClass | null = await Class.findById(classId).populate("student");
+    const lesson: ILesson | null = await Lesson.findById(lessonId);
+    response.status(200).json({user, klass, lesson});
+})
+
 
 export default classesRouter;

@@ -8,6 +8,7 @@ import TopBar from './component/TopBar';
 import Auth0ProviderWithHistory from './auth/Auth0ProviderWithHistory';
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Lessons from './pages/Lessons';
+import ViewLesson from './pages/ViewLesson';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +37,8 @@ const AppContent = () => {
                     <ProtectedRoute exact path="/children/:id/classes" component={ChildClasses} />
                     <ProtectedRoute exact path="/classes/:class_id/lessons" component={Lessons} />
                     <ProtectedRoute exact path="/children/:id/classes/:class_id/lessons" component={Lessons} />
+                    <ProtectedRoute exact path="/classes/:class_id/lessons/:lesson_id" component={ViewLesson} />
+                    <ProtectedRoute exact path="/children/:id/classes/:class_id/lessons/:lesson_id" component={ViewLesson} />
                 </Switch>
             </Container>
         </>
