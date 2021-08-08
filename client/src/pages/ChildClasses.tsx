@@ -7,6 +7,8 @@ import { IChild, IClass } from '../types/types';
 import AddClass from './AddClass';
 import { useAuth0 } from '@auth0/auth0-react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import HomeIcon from "@material-ui/icons/Home";
+import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 
 const getChildWithClasses = async (studentId: string, token: string): Promise<{child: IChild, classes: IClass[]}> => {
     const {data : {child, classes}} = await axios.get(`/api/classes?student=${studentId}`, {
@@ -37,6 +39,15 @@ const ChildClasses = () : ReactElement => {
         setLoading(false);
     }, []);
 
+    const breadcrumbs = [{
+        label: 'Home',
+        to: '/',
+        Icon: HomeIcon,
+    }, {
+        label: title,
+        to: `/children/${id}/classes`,
+        Icon: PersonRoundedIcon,
+    }];
     return (
         <ListView 
             title={title} 
@@ -44,6 +55,7 @@ const ChildClasses = () : ReactElement => {
             addButton={<AddClass studentId={id} />}
             avatarIcon={<MenuBookIcon />}
             isLoading={isLoading}
+            breadcrumbs={breadcrumbs}
         />
     )
 }

@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import ListPageSkeleton from "./ListPageSkeleton";
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import BreadcrumbLink from '@material-ui/core/Link';
-import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const useStyles = makeStyles({
