@@ -30,6 +30,7 @@ const ListPageSkeleton = (): ReactElement => {
     const classes = useStyles();
     return <Paper className={classes.paper}>
         <Skeleton variant="text" width={185} height={35} />
+        <Skeleton variant="text" width={185} height={35} />
         <Box mt={3}>
             <List>
                 <SkeletonRow />

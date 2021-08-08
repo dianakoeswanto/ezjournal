@@ -6,6 +6,13 @@ import AddChild from './AddChild';
 import { useChildren } from '../store/store';
 import { useAuth0 } from '@auth0/auth0-react';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
+import HomeIcon from '@material-ui/icons/Home';
+
+const breadcrumbs = [{
+    label: 'Home',
+    to: '/',
+    Icon: HomeIcon,
+}];
 
 const transformChildren = (children: IChild[]): ListViewData[] => children.map((child) => ({
     id: child.id,
@@ -45,7 +52,7 @@ const Home = (): React.ReactElement => {
                     )
             });
     }, []);
-   
+
     return (
         <div>
             {
@@ -55,6 +62,7 @@ const Home = (): React.ReactElement => {
                         displayData={transformClasses(classes)}
                         avatarIcon={<MenuBookIcon />}
                         isLoading={isLoading}
+                        breadcrumbs={breadcrumbs}
                     />
                 ) : (
                     <ListView
@@ -62,6 +70,7 @@ const Home = (): React.ReactElement => {
                         displayData={transformChildren(children)}
                         addButton={<AddChild />}
                         isLoading={isLoading}
+                        breadcrumbs={breadcrumbs}
                     />
                 )
             }

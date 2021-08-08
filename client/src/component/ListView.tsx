@@ -2,6 +2,10 @@ import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, makeStyles, 
 import { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import ListPageSkeleton from "./ListPageSkeleton";
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import BreadcrumbLink from '@material-ui/core/Link';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const useStyles = makeStyles({
     paper: {
@@ -28,14 +32,20 @@ export interface ListViewData {
     id: string,
     displayName: string,
     linkURL: string
-}
-interface ListViewProps {
+};
+export interface BreadcrumbData {
+    label: string,
+    to: string,
+    Icon: React.ElementType,
+};
+export interface ListViewProps {
     title: string,
     avatarIcon?: JSX.Element,
     displayData: ListViewData[],
     addButton?: ReactElement,
     isLoading: boolean,
-}
+    breadcrumbs?: BreadcrumbData[],
+};
 
 const ListView = (props : ListViewProps): ReactElement => {
     const classes = useStyles();
@@ -44,6 +54,17 @@ const ListView = (props : ListViewProps): ReactElement => {
     }
 
     return <Paper className={classes.paper}>
+        {props.breadcrumbs  && props.breadcrumbs!.length > 0 &&(
+            <Breadcrumbs aria-label="breadcrumb" style={{paddingLeft: "6px", paddingBottom: "12px"}}>
+                {props.breadcrumbs!.map(({label, to, Icon}) => (
+                    <BreadcrumbLink key={label} component={Link} to={to} style={{display: "flex"}}>
+                        <Icon style={{height: "20px", width: "20px", paddingRight: "3px"}} />
+                        {label}
+                    </BreadcrumbLink>
+                ))}
+            </Breadcrumbs>
+        )}
+
         <Box>
             <Typography className={classes.header} variant="h5">{props.title}</Typography>
             { props.addButton }
