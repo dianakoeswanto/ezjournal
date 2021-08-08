@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { ReactElement, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import ListView, { ListViewData } from "../component/ListView";
 import { IClass, ILesson, IUser } from "../types/types";
 import { useLessons } from '../store/lesson-store';
@@ -8,6 +8,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import AddLesson from './AddLesson';
 import { DateTime } from 'luxon';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import HomeIcon from '@material-ui/icons/Home';
+import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 
 const isTeacher = (user?: IUser, teacher?: IUser) : boolean => {
     return user?._id === teacher?._id
@@ -44,6 +47,7 @@ const Lessons = (): ReactElement => {
     const [klass, setKlass] = useState<IClass>();
     const [user, setUser] = useState<IUser>();
     const [isLoading, setLoading] = useState(true);
+    const { pathname } = useLocation();
 
     useEffect(() => {
         getAccessTokenSilently()
@@ -57,14 +61,30 @@ const Lessons = (): ReactElement => {
             })
         })
         
-    }, [])
+    }, []);
+
+    const title = getPageTitle(user, klass?.teacher, klass);
+    const breadcrumbs = klass ? [{
+        label: 'Home',
+        to: '/',
+        Icon: HomeIcon,
+    }, {
+        label: `${klass.student.firstname}'s Classes`,
+        to: `/children/${klass.student.id}/classes`,
+        Icon: PersonRoundedIcon,
+    }, {
+        label:title,
+        to : pathname,
+        Icon: MenuBookIcon,
+    }] : [];
     return (
         <ListView 
-            title={getPageTitle(user, klass?.teacher, klass)}
+            title={title}
             displayData={transformLessons(lessons)}
             avatarIcon={<ScheduleIcon />}
             addButton={isTeacher(user, klass?.teacher) ? <AddLesson classId={class_id}/> : undefined }
             isLoading={isLoading}
+            breadcrumbs={breadcrumbs}
         />
     )
 }
