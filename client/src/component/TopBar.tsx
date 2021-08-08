@@ -39,6 +39,7 @@ const TopBar = (): React.ReactElement => {
     setAnchorEl(null);
   };
 
+  console.log(JSON.stringify(user));
   if (!user) {
       // Showing nothing is the best way here. This path is hit under 2 different scenarios: when user about to log in
       // and after user logged out. We can't tell which scenario is happening right now and there doesn't seem to be a visual
@@ -69,7 +70,7 @@ const TopBar = (): React.ReactElement => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <Avatar className={classes.orange}>{(user['given_name'] || '')[0]}</Avatar>
+                <Avatar className={classes.orange}>{(user['given_name'] || user.name || '')[0]}</Avatar>
               </IconButton>
               <Menu
                 id="menu-appbar"
