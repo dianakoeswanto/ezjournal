@@ -26,6 +26,7 @@ const ChildClasses = () : ReactElement => {
     const [title, setTitle] = useState<string>('Classes');
     const [{childClasses}, {set}] = useChildClasses();
     const { getAccessTokenSilently } = useAuth0();
+    const [isLoading, setLoading] = useState(true);
 
     // @ts-ignore
     useEffect(async () => {
@@ -33,6 +34,7 @@ const ChildClasses = () : ReactElement => {
         const { child, classes } = await getChildWithClasses(id, token);
         setTitle(`${child.firstname}'s Classes`);
         set(classes);
+        setLoading(false);
     }, []);
 
     return (
@@ -41,6 +43,7 @@ const ChildClasses = () : ReactElement => {
             displayData={transformClasses(childClasses)} 
             addButton={<AddClass studentId={id} />}
             avatarIcon={<MenuBookIcon />}
+            isLoading={isLoading}
         />
     )
 }

@@ -43,6 +43,7 @@ const Lessons = (): ReactElement => {
     const [{ lessons }, { setLessons }] = useLessons();
     const [klass, setKlass] = useState<IClass>();
     const [user, setUser] = useState<IUser>();
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         getAccessTokenSilently()
@@ -52,6 +53,7 @@ const Lessons = (): ReactElement => {
                         setUser(user);
                         setKlass(klass);
                         setLessons(lessons);
+                        setLoading(false);
             })
         })
         
@@ -62,6 +64,7 @@ const Lessons = (): ReactElement => {
             displayData={transformLessons(lessons)}
             avatarIcon={<ScheduleIcon />}
             addButton={isTeacher(user, klass?.teacher) ? <AddLesson classId={class_id}/> : undefined }
+            isLoading={isLoading}
         />
     )
 }

@@ -1,6 +1,7 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, makeStyles, Paper, Typography } from "@material-ui/core";
 import { ReactElement } from "react";
 import { Link } from "react-router-dom";
+import ListPageSkeleton from "./ListPageSkeleton";
 
 const useStyles = makeStyles({
     paper: {
@@ -33,10 +34,15 @@ interface ListViewProps {
     avatarIcon?: JSX.Element,
     displayData: ListViewData[],
     addButton?: ReactElement,
+    isLoading: boolean,
 }
 
 const ListView = (props : ListViewProps): ReactElement => {
     const classes = useStyles();
+    if (props.isLoading) {
+        return <ListPageSkeleton />;
+    }
+
     return <Paper className={classes.paper}>
         <Box>
             <Typography className={classes.header} variant="h5">{props.title}</Typography>

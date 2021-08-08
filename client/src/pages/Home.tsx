@@ -31,6 +31,7 @@ const Home = (): React.ReactElement => {
     const { getAccessTokenSilently } = useAuth0();
     const [{ children }, { set }] = useChildren();
     const [classes, setClasses] = useState<IClass[]>([]);
+    const [isLoading, setLoading] = useState(true);
 
     useEffect(() => {
         getAccessTokenSilently()
@@ -39,6 +40,7 @@ const Home = (): React.ReactElement => {
                     .then(data => {
                             set(data.children);
                             setClasses(data.classes)
+                        setLoading(false);
                         }
                     )
             });
@@ -52,12 +54,14 @@ const Home = (): React.ReactElement => {
                         title="My Classes"
                         displayData={transformClasses(classes)}
                         avatarIcon={<MenuBookIcon />}
+                        isLoading={isLoading}
                     />
                 ) : (
                     <ListView
                         title="My Children"
                         displayData={transformChildren(children)}
                         addButton={<AddChild />}
+                        isLoading={isLoading}
                     />
                 )
             }
