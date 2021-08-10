@@ -113,7 +113,6 @@ const AddLesson = (props: AddLessonProps): React.ReactElement => {
     }
 
     const handleSubmit = async () => {
-        console.log("****", fields);
         if(isFormValid()) {
             const token = await getAccessTokenSilently();
             const response = await axios.post(`/api/classes/${props.classId}/lesson`, {...fields}, {
